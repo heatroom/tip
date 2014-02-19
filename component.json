@@ -1,0 +1,26 @@
+{
+  "name": "tip",
+  "repo": "heatroom/tip",
+  "description": "Tip component",
+  "version": "0.0.1",
+  "keywords": [
+    "tooltip",
+    "tip",
+    "ui"
+  ],
+  "dependencies": {
+    "component/emitter": "1.0.0",
+    "component/bind": "*",
+    "component/jquery": "*"
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.js",
+    "template.js"
+  ],
+  "styles": [
+    "tip.css"
+  ]
+}
