@@ -40,6 +40,8 @@ function tip(el, options) {
     tip.cancelHideOnHover(delay);
     tip.attach(el, delay);
   });
+
+
 }
 
 /**
@@ -50,6 +52,7 @@ function tip(el, options) {
  */
 
 function Tip(content, options) {
+  var self = this;
   if (!(this instanceof Tip)) return tip(content, options);
   Emitter.call(this);
   this.classname = '';
@@ -58,10 +61,14 @@ function Tip(content, options) {
   Tip.prototype.message.call(this, content);
   this.position('south');
   if (Tip.effect) this.effect(Tip.effect);
+  this.blurOverlays = [];
+  o(document).on('click', function(e) {
+    self.hideBlurOverlays(e);
+  });
 }
 
 /**
- * Mixin emitter.
+ * Mixin emitter
  */
 
 Emitter(Tip.prototype);
@@ -111,6 +118,32 @@ Tip.prototype.cancelHideOnHover = function(delay){
   this.el.hover(
     bind(this, this.cancelHide),
     bind(this, this.hide, delay));
+  return this;
+};
+
+Tip.prototype.hideBlurOverlays = function(e){
+  o(this.blurOverlays).each(function(index, item) {
+    if(!item) {
+      return;
+    }
+    if (this.el[0] === e.target || o.contains(this.el[0], e.target)) {
+        return;
+    }
+    for(var i = 0, len = item._relativeElements.length; i < len; i++) {
+      var el = o(item._relativeElements[i])[0];
+      if (el === e.target || o.contains(el, e.target)) {
+        return;
+      }
+    }
+    item.hide();
+  });
+};
+
+Tip.prototype.blurHide = function(arr) {
+  arr = o.makeArray(arr);
+  arr.push(this.el);
+  this._relativeElements = arr;
+  this.blurOverlays.push(this);
   return this;
 };
 
